@@ -30,6 +30,12 @@ public class AuthService {
             String role
     ) {
 
+        if (email == null || email.isBlank()) {
+            throw new RuntimeException("Email is required");
+        }
+
+        email = email.trim().toLowerCase();
+
         if (userRepository.existsByEmail(email)) {
             throw new RuntimeException("Email already registered");
         }
@@ -64,8 +70,14 @@ public class AuthService {
 
     public String login(LoginRequest request) {
 
+        if (request.getEmail() == null || request.getEmail().isBlank()) {
+            throw new RuntimeException("Invalid email or password");
+        }
+
+        String email = request.getEmail().trim().toLowerCase();
+
         User user = userRepository
-                .findByEmail(request.getEmail())
+                .findByEmail(email)
                 .orElseThrow(() ->
                         new RuntimeException("Invalid email or password")
                 );

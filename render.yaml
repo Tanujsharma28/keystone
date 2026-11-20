@@ -1,0 +1,35 @@
+services:
+  - type: web
+    name: keystone-backend
+    runtime: docker
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    healthCheckPath: /api/test
+    envVars:
+      - key: SPRING_DATASOURCE_URL
+        fromDatabase:
+          name: keystone-db
+          property: connectionString
+      - key: SPRING_DATASOURCE_USERNAME
+        fromDatabase:
+          name: keystone-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: keystone-db
+          property: password
+      - key: JWT_SECRET
+        generateValue: true
+      - key: TECHNICIAN_PASSWORD
+        generateValue: true
+      - key: DISPATCHER_PASSWORD
+        generateValue: true
+      - key: MANAGER_PASSWORD
+        generateValue: true
+      - key: CUSTOMER_PASSWORD
+        generateValue: true
+
+databases:
+  - name: keystone-db
+    databaseName: keystone
+    user: keystone
